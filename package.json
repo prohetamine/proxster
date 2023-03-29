@@ -1,0 +1,20 @@
+{
+  "name": "proxster",
+  "version": "1.0.0",
+  "description": "Proxy parser and checker",
+  "main": "src/index.js",
+  "author": "Stas Prohetamine",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https-proxy-agent": "^5.0.1",
+    "moment": "^2.29.4",
+    "node-fetch": "2",
+    "path": "^0.12.7",
+    "sleep-promise": "^9.1.0",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "socks-proxy-agent": "^7.0.0"
+  }
+}
