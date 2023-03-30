@@ -60,6 +60,8 @@ const Proxster = require('../../src/index')
   setInterval(async () => {
     console.log('all')
     await proxy.all().then(e => console.log(e))
+
+    // await cancel('111.111.111.111')
   }, 10000)
 
   setInterval(async () => {

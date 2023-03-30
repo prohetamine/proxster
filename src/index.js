@@ -248,6 +248,19 @@ class Proxster {
             return kill;
         });
     }
+    cancel(_proxy) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.isRemoteClient) {
+                const result = yield this.socketClientWrapper('cancel', _proxy);
+                return result;
+            }
+            // @ts-ignore
+            const currentTime = new Date() - 0;
+            this.proxys = this.proxys.map(proxy => proxy.proxy === _proxy
+                ? (Object.assign(Object.assign({}, proxy), { isGood: false, isBlocked: true, goodTimeout: 0, badTimeout: currentTime + this.blockedBadProxyTimeout }))
+                : proxy);
+        });
+    }
     wait({ minimumProxyCount, interval } = { minimumProxyCount: 10, interval: 5000 }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isRemoteClient) {

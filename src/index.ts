@@ -360,6 +360,27 @@ class Proxster {
 		return kill
 	}
 
+	public async cancel (_proxy: string) {
+		if (this.isRemoteClient) {
+			const result = await this.socketClientWrapper('cancel', _proxy)
+			return result
+		} 
+
+		// @ts-ignore
+		const currentTime = new Date() - 0
+		this.proxys = this.proxys.map(
+			proxy => proxy.proxy === _proxy 
+				? ({
+					...proxy,
+					isGood: false,
+					isBlocked: true,
+					goodTimeout: 0,
+					badTimeout: currentTime + this.blockedBadProxyTimeout
+				})
+				: proxy
+		)
+	}
+
 	public async wait ({ minimumProxyCount, interval }: { minimumProxyCount: number, interval: number } = { minimumProxyCount: 10, interval: 5000 }) {
 		if (this.isRemoteClient) {
 			const result = await this.socketClientWrapper('wait', { minimumProxyCount, interval })
