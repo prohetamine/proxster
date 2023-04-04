@@ -25,7 +25,7 @@ const nativeRequest = (url, { headers = {}, method = "GET", body = undefined, ti
         })
             .then((data) => data.text());
         clearTimeout(timeId);
-        return !!indicator(data);
+        return !!indicator(data, proxy);
     }
     catch (e) {
         clearTimeout(timeId);
