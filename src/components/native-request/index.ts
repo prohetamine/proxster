@@ -35,8 +35,8 @@ const nativeRequest = async (
       method,
       signal: controller.signal 
     })
-    .then((data: { text: Function, headers: any, status: Number }) => ({ 
-      body: data.text(),
+    .then(async (data: { text: Function, headers: any, status: Number }) => ({ 
+      body: await data.text(),
       headers: data.headers.raw(),
       status: data.status
     }))
