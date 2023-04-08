@@ -23,10 +23,12 @@ const nativeRequest = (url, { headers = {}, method = "GET", body = undefined, ti
             method,
             signal: controller.signal
         })
-            .then((data) => ({
-            body: data.text(),
-            headers: data.headers.raw(),
-            status: data.status
+            .then((data) => __awaiter(void 0, void 0, void 0, function* () {
+            return ({
+                body: yield data.text(),
+                headers: data.headers.raw(),
+                status: data.status
+            });
         }));
         clearTimeout(timeId);
         return !!indicator(data.body, proxy, data.headers, data.status);
