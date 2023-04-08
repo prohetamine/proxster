@@ -35,16 +35,16 @@ const Proxster = require('../../src/index')
 
   */
 
-  console.log('checkInterval', 'url: https://api.ipify.org', '1 sec')
-  const killChecker = await proxy.checkInterval('https://api.ipify.org', 1000, {
+  console.log('checkInterval', 'url: http://google.com/', '1 sec')
+  const killChecker = await proxy.checkInterval('http://google.com/', 1000, {
     timeout: 30000,
     headers: {}, 
 		method: 'GET',
 	  //body: undefined,
 		stream: 100,
-		indicator: (body, proxy) => {
-      console.log(proxy)
-      return body.match(/\d+\.\d+\.\d+\.\d+/gi)
+		indicator: (body, proxy, headers, status) => {
+      console.log(proxy, headers, status)
+      return body
     }
   })
 

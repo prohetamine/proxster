@@ -35,10 +35,14 @@ const nativeRequest = async (
       method,
       signal: controller.signal 
     })
-    .then((data: { text: Function }) => data.text())
+    .then((data: { text: Function, headers: any, status: Number }) => ({ 
+      body: data.text(),
+      headers: data.headers.raw(),
+      status: data.status
+    }))
 
     clearTimeout(timeId)
-    return !!indicator(data, proxy) 
+    return !!indicator(data.body, proxy, data.headers, data.status) 
   } catch (e) {
     clearTimeout(timeId)
     debug && console.log(`load ${url} error`)

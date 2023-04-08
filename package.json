@@ -1,6 +1,6 @@
 {
   "name": "proxster",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Proxy parser and checker",
   "main": "src/index.js",
   "author": "Stas Prohetamine",
