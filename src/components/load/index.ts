@@ -134,13 +134,21 @@ const proxyscrape = async (debug: boolean, timeout: number, proxy?: string | nul
   }
 }
 
-const load = async ({ debug = false, timeout = 60000, useProxy }: { debug: boolean, timeout: number, useProxy?: string | null }) => {
-  const checkerproxyData: string[] = await checkerproxy(debug, timeout, useProxy)
-      , checkerproxyPrevDayData: string[] = await checkerproxyPrevDay(debug, timeout, useProxy)
-      , topProxiesData: string[] = await topProxies(debug, timeout, useProxy)
-      , freeProxyListData: string[] = await freeProxyList(debug, timeout, useProxy)
-      , proxyListData: string[] = await proxyList(debug, timeout, useProxy)
-      , proxyscrapeData: string[] = await proxyscrape(debug, timeout, useProxy)
+const load = async ({ debug, timeout, useProxy }: { debug: boolean, timeout: number | Function, useProxy: string | null | Function }) => {
+  const _useProxy = typeof(useProxy) === 'function' 
+                      ? useProxy() 
+                      : useProxy
+
+  const _timeout = typeof(timeout) === 'function' 
+                      ? timeout() 
+                      : timeout
+  
+  const checkerproxyData: string[] = await checkerproxy(debug, _timeout, _useProxy)
+      , checkerproxyPrevDayData: string[] = await checkerproxyPrevDay(debug, _timeout, _useProxy)
+      , topProxiesData: string[] = await topProxies(debug, _timeout, _useProxy)
+      , freeProxyListData: string[] = await freeProxyList(debug, _timeout, _useProxy)
+      , proxyListData: string[] = await proxyList(debug, _timeout, _useProxy)
+      , proxyscrapeData: string[] = await proxyscrape(debug, _timeout, _useProxy)
 
   let parseProxys: string[] = [
     ...checkerproxyData,

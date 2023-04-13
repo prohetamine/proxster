@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nf = require('node-fetch'), HttpsProxyAgent = require('https-proxy-agent');
-const nativeRequest = (url, { headers = {}, method = "GET", body = undefined, timeout = 60000, proxy, debug = false, indicator = () => true }) => __awaiter(void 0, void 0, void 0, function* () {
+const nativeRequest = ({ url, headers = {}, method = "GET", body = undefined, timeout = 60000, proxy, debug = false, indicator = () => true }) => __awaiter(void 0, void 0, void 0, function* () {
     const controller = new AbortController();
     const timeId = setTimeout(() => {
         controller.abort();

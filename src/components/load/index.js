@@ -126,8 +126,14 @@ const proxyscrape = (debug, timeout, proxy) => __awaiter(void 0, void 0, void 0,
         return [];
     }
 });
-const load = ({ debug = false, timeout = 60000, useProxy }) => __awaiter(void 0, void 0, void 0, function* () {
-    const checkerproxyData = yield checkerproxy(debug, timeout, useProxy), checkerproxyPrevDayData = yield checkerproxyPrevDay(debug, timeout, useProxy), topProxiesData = yield topProxies(debug, timeout, useProxy), freeProxyListData = yield freeProxyList(debug, timeout, useProxy), proxyListData = yield proxyList(debug, timeout, useProxy), proxyscrapeData = yield proxyscrape(debug, timeout, useProxy);
+const load = ({ debug, timeout, useProxy }) => __awaiter(void 0, void 0, void 0, function* () {
+    const _useProxy = typeof (useProxy) === 'function'
+        ? useProxy()
+        : useProxy;
+    const _timeout = typeof (timeout) === 'function'
+        ? timeout()
+        : timeout;
+    const checkerproxyData = yield checkerproxy(debug, _timeout, _useProxy), checkerproxyPrevDayData = yield checkerproxyPrevDay(debug, _timeout, _useProxy), topProxiesData = yield topProxies(debug, _timeout, _useProxy), freeProxyListData = yield freeProxyList(debug, _timeout, _useProxy), proxyListData = yield proxyList(debug, _timeout, _useProxy), proxyscrapeData = yield proxyscrape(debug, _timeout, _useProxy);
     let parseProxys = [
         ...checkerproxyData,
         ...checkerproxyPrevDayData,

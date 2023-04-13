@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const native_request_1 = __importDefault(require("../native-request"));
 const sleep = require('sleep-promise');
-const nativeRequestInterval = (url, interval, { headers = {}, method = "GET", body = undefined, nextProxy = () => { }, goodProxy = () => { }, badProxy = () => { }, indicator = () => true, debug = false, timeout = 60000, stream = 5 }) => {
+const nativeRequestInterval = ({ url, interval, headers, method, body, nextProxy, goodProxy, badProxy, indicator, debug, timeout, stream }) => {
     const instance = () => __awaiter(void 0, void 0, void 0, function* () {
         const proxy = nextProxy();
         if (proxy === 'not found') {
@@ -22,11 +22,27 @@ const nativeRequestInterval = (url, interval, { headers = {}, method = "GET", bo
             yield sleep(10000);
             return;
         }
-        const isGood = yield (0, native_request_1.default)(url, {
-            headers,
-            method,
-            body,
-            timeout,
+        const _url = typeof (url) === 'function'
+            ? url(proxy)
+            : url;
+        const _headers = typeof (headers) === 'function'
+            ? headers(proxy)
+            : headers;
+        const _method = typeof (method) === 'function'
+            ? method(proxy)
+            : method;
+        const _body = typeof (body) === 'function'
+            ? body(proxy)
+            : body;
+        const _timeout = typeof (timeout) === 'function'
+            ? timeout(proxy)
+            : timeout;
+        const isGood = yield (0, native_request_1.default)({
+            url: _url,
+            headers: _headers,
+            method: _method,
+            body: _body,
+            timeout: _timeout,
             proxy,
             debug,
             indicator
@@ -46,10 +62,16 @@ const nativeRequestInterval = (url, interval, { headers = {}, method = "GET", bo
                 console.log('stop');
                 return;
             }
-            yield Promise.all(Array(stream)
-                .fill(true)
+            const _stream = typeof (stream) === 'function'
+                ? stream()
+                : stream;
+            const _interval = typeof (interval) === 'function'
+                ? interval()
+                : interval;
+            yield Promise.all(Array(_stream)
+                .fill(1)
                 .map(() => instance()));
-            yield sleep(interval);
+            yield sleep(_interval);
         }
     }))();
     return () => stop = true;

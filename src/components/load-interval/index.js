@@ -13,22 +13,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const load_1 = __importDefault(require("../load"));
-const loadInterval = (callback = () => { }, interval = 5000, option = {
-    started: false,
-    debug: false,
-    timeout: 60000,
-    useProxy: null,
-}) => {
+const sleep_promise_1 = __importDefault(require("sleep-promise"));
+const loadInterval = ({ callback, interval, started, timeout, useProxy, debug }) => {
+    let isWork = true;
     const instance = () => __awaiter(void 0, void 0, void 0, function* () {
+        if (!isWork) {
+            return;
+        }
+        const _interval = typeof (interval) === 'function'
+            ? interval()
+            : interval;
         const proxys = yield (0, load_1.default)({
-            debug: option.debug,
-            timeout: option.timeout,
-            useProxy: option.useProxy,
+            debug,
+            timeout,
+            useProxy
         });
         callback(proxys);
+        yield (0, sleep_promise_1.default)(_interval);
+        instance();
     });
-    option.started && instance();
-    const timeId = setInterval(instance, interval);
-    return () => clearInterval(timeId);
+    const _interval = typeof (interval) === 'function'
+        ? interval()
+        : interval;
+    if (started) {
+        instance();
+    }
+    const timeId = setInterval(instance, _interval);
+    return () => {
+        clearInterval(timeId);
+        isWork = false;
+    };
 };
 exports.default = loadInterval;

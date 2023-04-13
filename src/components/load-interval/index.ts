@@ -1,33 +1,58 @@
 import load from '../load'
+import sleep from 'sleep-promise'
 
 const loadInterval = (
-    callback: Function = () => {},
-    interval: number = 5000,
-    option: { 
-      started?: boolean, 
-      debug: boolean,
-      timeout: number,
-      useProxy?: string | null,
-    } = {
-      started: false,
-      debug: false,
-      timeout: 60000,
-      useProxy: null,
+    { 
+      callback,
+      interval,
+      started, 
+      timeout,
+      useProxy,
+			debug
+    }: {
+      callback: Function,
+      interval: number | Function,
+      started: boolean,
+      timeout: number | Function
+      useProxy: string | null | Function,
+			debug: boolean
     }
   ) => {
+    let isWork = true
+
     const instance = async () => {
+      if (!isWork) {
+        return
+      }
+
+      const _interval = typeof(interval) === 'function' 
+                          ? interval() 
+                          : interval
+      
       const proxys = await load({
-        debug: option.debug,
-        timeout: option.timeout,
-        useProxy: option.useProxy,
+        debug,
+        timeout,
+        useProxy
       })
   
       callback(proxys)
+      await sleep(_interval)
+      instance()
     }
   
-    option.started && instance()
-    const timeId = setInterval(instance, interval)
-    return () => clearInterval(timeId)
+    const _interval = typeof(interval) === 'function' 
+                          ? interval() 
+                          : interval
+
+    if (started) { 
+      instance()
+    }
+    
+    const timeId = setInterval(instance, _interval)
+    return () => {
+      clearInterval(timeId)
+      isWork = false
+    }
   }
 
-  export default loadInterval
+export default loadInterval

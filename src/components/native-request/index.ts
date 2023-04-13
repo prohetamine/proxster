@@ -2,8 +2,8 @@ const nf = require('node-fetch')
     , HttpsProxyAgent = require('https-proxy-agent')
 
 const nativeRequest = async (
-  url: string,
   {
+    url,
     headers = {}, 
     method = "GET",
     body = undefined,
@@ -12,6 +12,7 @@ const nativeRequest = async (
     debug = false,
     indicator = () => true
   }: {
+    url: string,
     headers: object, 
     method: string,
     body: any,
